@@ -3,9 +3,19 @@ import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+         // Parameter object contains height, width, and array of pixels
+        Parameters p;
+
+        // Display Window with Menu
         //TODO: Write the image input function
 
         // Loads the OpenCV Java Wrapper Library
@@ -17,9 +27,17 @@ public class Main {
         //Loads a Binary Image into Matrix
         Mat img = loadBinary("original_binary.jpg"); //TODO: Remove Test Code
 
+        //Converts to 2D array
+        p = convertToArray(img);
+
+        //Label Algorithm Passthrough
         //TODO: Write 2 pass algo
+
+        //Color the image
         //TODO: Color the image
 
+        //Display the Images
+        //TODO: Display Images
 
     }
 
@@ -36,7 +54,35 @@ public class Main {
         return img;
     }
 
-    private static void convertToArray(Mat m) {
+    private static Parameters convertToArray(Mat m) throws IOException{
+        int width, height;
+        String input;
+
+        //Converts size into width and height integers
+        input = m.size().toString();
+        String delims = "x";
+        String[] tokens = input.split(delims);
+        width = Integer.parseInt(tokens[0]);
+        height = Integer.parseInt(tokens[1]);
+
+        //Creates 2D array and Image
+        int[][] array = new int[width][height];
+        BufferedImage img = ImageIO.read(new File("original_binary.jpg"));
+
+        //Populates array
+        for(int x = 0; x < width; x++){
+            for(int y = 0; y < height; y++) {
+                Color c = new Color(img.getRGB(x,y));
+                array[x][y] = c.getRed();
+            }
+        }
+
+        //Load Parameter object and return
+        Parameters p = new Parameters(width, height, array);
+        return p;
+    }
+
+    private static void labelImage(Parameters p) {
 
     }
 }
