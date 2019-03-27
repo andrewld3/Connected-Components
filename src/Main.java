@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Parameter;
 
 public class Main {
 
@@ -29,11 +30,10 @@ public class Main {
 
         //Converts to 2D array
         p = convertToArray(img);
-
-        //Label Algorithm Passthrough
-        //TODO: Write 2 pass algo
-
-        //Color the image
+        //Label pixels and then colors image appropriately.
+        //TODO: Write DFS
+        DFS search = new DFS(p);
+        search.componentSearch();
         //TODO: Color the image
 
         //Display the Images
@@ -70,6 +70,7 @@ public class Main {
         BufferedImage img = ImageIO.read(new File("original_binary.jpg"));
 
         //Populates array
+        //Starting point is Top Left Corner at (0,0)
         for(int x = 0; x < width; x++){
             for(int y = 0; y < height; y++) {
                 Color c = new Color(img.getRGB(x,y));
@@ -82,7 +83,14 @@ public class Main {
         return p;
     }
 
-    private static void labelImage(Parameters p) {
-
+    private static void printArray(Parameters p) {
+        int[][] a = p.getArray();
+        for(int y = 0; y < p.getHeight(); y++) {
+            for(int x = 0; x < p.getWidth(); x++) {
+                System.out.printf("%3d", a[x][y]);
+                System.out.print(" ");
+            }
+            System.out.println();
+        }
     }
 }
