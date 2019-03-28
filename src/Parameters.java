@@ -2,11 +2,13 @@ public class Parameters {
     private int width;
     private int height;
     private int[][] array;
+    private String filename;
 
-    public Parameters(int w, int h, int[][] a) {
+    public Parameters(int w, int h, int[][] a, String fn) {
         width = w;
         height = h;
         array = a;
+        filename = fn;
     }
 
     public int getWidth() {
@@ -23,5 +25,9 @@ public class Parameters {
 
     public void setArray(int[][] a) {
         array = a;
+    }
+
+    public String getFileName() {
+        return filename;
     }
 }

@@ -8,44 +8,41 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Parameter;
+import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
-         // Parameter object contains height, width, and array of pixels
+        String fileName;
+
+        // Parameter object contains height, width, array of pixels, and filename
         Parameters p;
 
-        // Display Window with Menu
-        //TODO: Write the image input function
+        // Get File Name
+        fileName = getFileName();
 
         // Loads the OpenCV Java Wrapper Library
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
         // Turns a full color image into greyscale and then converts it into binary
-        binarizeImage("original"); //TODO: Remove Test Code
+        binarizeImage(fileName);
 
         //Loads a Binary Image into Matrix
-        Mat img = loadBinary("original_binary.jpg"); //TODO: Remove Test Code
+        Mat img = loadBinary(fileName + "_binary.jpg");
 
         //Converts to 2D array
-        p = convertToArray(img);
-        //Label pixels and then colors image appropriately.
-        //TODO: Write DFS
-        DFS search = new DFS(p);
-        search.componentSearch();
-        //TODO: Color the image
+        p = convertToArray(img, fileName);
 
-        //Display the Images
-        //TODO: Display Images
+        //Label pixels and then colors image appropriately.
+        Labeling label = new Labeling(p);
+        label.labelImage();
 
     }
 
     private static void binarizeImage(String fileName) {
         Mat src = Imgcodecs.imread(fileName + ".jpg",Imgcodecs.CV_LOAD_IMAGE_GRAYSCALE);
         Mat dst = new Mat();
-        //TODO: Test against multiple images
-        Imgproc.threshold(src,dst,150,255,Imgproc.THRESH_BINARY);
+        Imgproc.threshold(src,dst,225,255,Imgproc.THRESH_BINARY);
         Imgcodecs.imwrite(fileName + "_binary.jpg", dst);
     }
 
@@ -54,7 +51,7 @@ public class Main {
         return img;
     }
 
-    private static Parameters convertToArray(Mat m) throws IOException{
+    private static Parameters convertToArray(Mat m, String fileName) throws IOException{
         int width, height;
         String input;
 
@@ -67,7 +64,7 @@ public class Main {
 
         //Creates 2D array and Image
         int[][] array = new int[width][height];
-        BufferedImage img = ImageIO.read(new File("original_binary.jpg"));
+        BufferedImage img = ImageIO.read(new File(fileName + "_binary.jpg"));
 
         //Populates array
         //Starting point is Top Left Corner at (0,0)
@@ -79,7 +76,7 @@ public class Main {
         }
 
         //Load Parameter object and return
-        Parameters p = new Parameters(width, height, array);
+        Parameters p = new Parameters(width, height, array, fileName);
         return p;
     }
 
@@ -92,5 +89,11 @@ public class Main {
             }
             System.out.println();
         }
+    }
+
+    private static String getFileName( ) {
+        Scanner in = new Scanner(System.in);
+        System.out.print("File: ");
+        return in.nextLine();
     }
 }
